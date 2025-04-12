@@ -9,10 +9,10 @@ struct SearchFormView: View {
 
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        NavigationStack {
             
             //form section start
-            VStack {
+            VStack(alignment: .leading, spacing: 5) {
                 
                 Text("Origin")
                     .foregroundStyle(Color.gray)
@@ -49,7 +49,7 @@ struct SearchFormView: View {
                     .padding(.bottom, 10)
                 
                 //start of first horizontal
-                HStack(spacing: 10){
+                HStack(spacing: 20){
                     VStack{
                         Text("Depature")
                             .foregroundStyle(Color.gray)
@@ -65,7 +65,6 @@ struct SearchFormView: View {
                             )
                     }
                     
-                    Spacer()
                     
                     VStack{
                         Text("Return")
@@ -88,7 +87,7 @@ struct SearchFormView: View {
                 
                 
                 //start of second horizontal
-                HStack(spacing: 10){
+                HStack(spacing: 20){
                     VStack{
                         Text("Passengers")
                             .foregroundStyle(Color.gray)
@@ -103,7 +102,6 @@ struct SearchFormView: View {
                             )
                     }
                     
-                    Spacer()
                     
                     VStack{
                         Text("Class")
@@ -125,31 +123,30 @@ struct SearchFormView: View {
                 //end of second horizontal
                 
                 //start of search button
-                Button(action: {
-                    showSearchDetail = true
+                NavigationLink(destination: SearchDetailView()) {
+                    HStack {
+                        Text("SEARCH")
+                    }
+                    .bold()
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(red: 0.54, green: 0.37, blue: 0.89))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 1)
+                }
+                .simultaneousGesture(TapGesture().onEnded {
                     print("Login button tapped")
-                    }) {
-                        HStack {
-                            Text("SEARCH")
-                           }
-                           .bold()
-                           .frame(maxWidth: .infinity)
-                           .padding()
-                           .background(Color(red: 0.54, green: 0.37, blue: 0.89))
-                           .foregroundColor(.white)
-                           .cornerRadius(10)
-                           .shadow(radius: 1)
-                       }
+                })
                 //end of search button
                 
             }
-            .fullScreenCover(isPresented: $showSearchDetail){
-                    SearchDetailView()
-            }
+          
             .padding(.horizontal)
+            .frame(maxWidth:.infinity, maxHeight: .infinity,alignment: .topLeading)
             //end of form section
         }
-        .frame(maxWidth:.infinity, maxHeight: .infinity,alignment: .topLeading)
+        
     }
 }
 

@@ -7,9 +7,10 @@ struct LoginView: View {
     @State private var password: String = ""
     @State private var showFlightPage: Bool = false
     @State private var isLoading = false
+    @State private var loginError:String = ""
     
     var body: some View {
-        VStack {
+        NavigationStack {
             Text("Login instantly")
                 .foregroundStyle(Color.gray)
             
@@ -17,7 +18,7 @@ struct LoginView: View {
                 
                 //facebook login button
                 Button(action: {
-                    print("Login button tapped")
+                    print("")
                     }) {
                         HStack {
                             Image("facebook")
@@ -39,7 +40,7 @@ struct LoginView: View {
 
                 //google login button
                 Button(action: {
-                    print("Login button tapped")
+                    print("")
                     }) {
                         HStack {
                             Image("google")
@@ -137,15 +138,45 @@ struct LoginView: View {
                     
                 }
                
+                //login toast error
+                if !loginError.isEmpty {
+                    Text(loginError)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
                 
                 // login button
                 ZStack {
                     Button(action: {
-                        isLoading = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            isLoading = false
-                            showFlightPage = true
+                        Task {
+                            guard !email.isEmpty, !password.isEmpty else {
+                                loginError = "Please fill in all fields"
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    loginError = ""
+                                }
+                                return
+                            }
+                            
+                            isLoading = true
+                            loginError = ""
+                            
+                            let success = await login(email: email, password: password)
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                isLoading = false
+                                
+                                if success{
+                                    showFlightPage = true
+                                }else {
+                                    loginError = "Invalid credentials"
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                        loginError = ""
+                                    }
+                                }
+                            }
                         }
+                    
                     }) {
                         HStack {
                             Text("Login")
@@ -163,6 +194,7 @@ struct LoginView: View {
                                 .progressViewStyle(CircularProgressViewStyle())
                                 .scaleEffect(1.2)
                         }
+                        
                     }
                     .padding(.horizontal)
                 }
@@ -170,11 +202,10 @@ struct LoginView: View {
                 
                 //register for account link
                 HStack{
-                    
-                    Text("Don't have an account?")
-                        .foregroundStyle(Color.gray)
-                    
-                    NavigationLink(destination: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Destination@*/Text("Destination")/*@END_MENU_TOKEN@*/) {
+                    NavigationLink(destination: RegistrationView()) {
+                        Text("Don't have an account?")
+                            .foregroundStyle(Color.gray)
+                        
                         Text("Register now")
                             .foregroundStyle(Color(red: 0.54, green: 0.37, blue: 0.89))
                             .bold()

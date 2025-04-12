@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MostRecommendedView: View {
     var body: some View {
+        
         VStack(alignment: .leading, spacing: 5){
             
             //start of recommended text section

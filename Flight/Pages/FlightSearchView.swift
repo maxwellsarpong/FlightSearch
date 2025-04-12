@@ -5,7 +5,7 @@ struct FlightSearchView: View {
     @State private var selectedTab = 0
 
     var body: some View {
-        VStack {
+        NavigationStack {
             // Custom Tab Selector with underline effect
             HStack(spacing: 20) {
                 TabText(title: "FLIGHTS", tag: 0, selectedTab: $selectedTab)
@@ -17,28 +17,39 @@ struct FlightSearchView: View {
 
             // Tab Content
             TabView(selection: $selectedTab) {
-                ScrollView(.vertical){
-                    SearchFormView()
-                        .padding(.bottom, 10)
-                    MostRecommendedView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .tag(0)
+                VStack {
+                    ScrollView(.vertical){
+                        SearchFormView()
+                            .padding(.bottom, 10)
+                        
+                        MostRecommendedView()
+                            .frame(maxWidth: .infinity)
+                    }
                 }
+                .tag(0)
 
-                Text("🚆 Train View")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .tag(1)
 
-                Text("🚌 Bus View")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .tag(2)
+                VStack {
+                    Text("🚆 Train View")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .tag(1)
+
+
+                VStack {
+                    Text("🚌 Bus View")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .tag(2)
+
 
                 Text("🏨 Hotel View")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .tag(3)
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .tag(3)
+
         }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }
 }
 
